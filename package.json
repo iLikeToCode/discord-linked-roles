@@ -1,0 +1,33 @@
+{
+  "name": "discord-linked-roles",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/iLikeToCode/discord-linked-roles#readme",
+  "bugs": {
+    "url": "https://github.com/iLikeToCode/discord-linked-roles/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iLikeToCode/discord-linked-roles.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.5.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.6"
+  }
+}
