@@ -18,6 +18,8 @@ var app = express();
 
 app.use(cookieParser(c.secret));
 
+app.get('/', (req, res) => res.redirect('/linked-roles');
+
 app.get('/linked-roles', function (req, res) {
     const { url, state } = d.getOauthUrl(process.env.DISCORD_REDIRECT_URI, process.env.DISCORD_CLIENT_ID)
     res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true })
