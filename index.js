@@ -1,6 +1,7 @@
 import * as d from './discord.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import roleMap from './roleMap.json';
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -22,13 +23,6 @@ app.get('/linked-roles', function (req, res) {
     res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true })
     return res.redirect(url)
 });
-
-const roleMap = {
-    "moderator": ["1404883567552761947"],
-    "administrator": ["1404882968366944427"],
-    "supervisor": ["1429824891968032798"],
-    "chairman": ["1404877894790021180"],
-}
 
 app.get('/callback', async function (req,res) {const code = req.query['code'];
     const discordState = req.query['state'];
