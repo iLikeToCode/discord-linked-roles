@@ -1,11 +1,6 @@
+import roles from "./roleMap.json" with { type: "json" }
 import dotenv from "dotenv";
 dotenv.config();
-
-/**
- * Load environment variables from a .env file, if it exists.
- */
-
-dotenv.config()
 
 const c = {
     redirect_uri: process.env.DISCORD_REDIRECT_URI,
@@ -15,52 +10,30 @@ const c = {
     secret: process.env.COOKIE_SECRET,
 }
 
-/**
- * Register the metadata to be stored by Discord. This should be a one time action.
- * Note: uses a Bot token for authentication, not a user token.
- */
 const url = `https://discord.com/api/v10/applications/${c.client_id}/role-connections/metadata`;
-const body = [
-  {
-    key: 'moderator',
-    name: 'Moderator',
-    description: 'Moderator Rank',
-    type: 7,
-  },
-  {
-    key: 'administrator',
-    name: 'Administrator',
-    description: 'Administrator Rank',
-    type: 7,
-  },
-  {
-    key: 'supervisor',
-    name: 'Supervisor',
-    description: 'Supervisor Rank',
-    type: 7,
-  },
-  {
-    key: 'chairman',
-    name: 'Chairman',
-    description: 'Chairman Rank',
-    type: 7,
-  }
-];
 
-(async () => {
-  const response = await fetch(url, {
-    method: 'PUT',
-    body: JSON.stringify(body),
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bot ${c.token}`,
-    },
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data);
-  } else {
-    const data = await response.text();
-    console.log(data);
-  }
-})();
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+const body = Object.keys(roles).map(key => ({
+    key,
+    name: capitalize(key),
+    description: `${capitalize(key)} Rank`,
+    type: 7
+}));
+
+const response = await fetch(url, {
+  method: 'PUT',
+  body: JSON.stringify(body),
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bot ${c.token}`,
+  },
+});
+
+if (response.ok) {
+  const data = await response.json();
+  console.log(data);
+} else {
+  const data = await response.text();
+  console.log(data);
+}
