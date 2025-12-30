@@ -3,7 +3,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
 dotenv.config();
-import { tokenStore } from './database.js'
 
 
 const c = {
@@ -12,12 +11,7 @@ const c = {
     client_secret: process.env.DISCORD_CLIENT_SECRET,
     token: process.env.DISCORD_TOKEN,
     secret: process.env.COOKIE_SECRET,
-    encryption_key: Buffer.from(process.env.ENCRYPTION_KEY, "hex")
 }
-
-console.log(c.encryption_key.length);
-
-const t = tokenStore(c.encryption_key)
 
 var app = express();
 
@@ -29,25 +23,50 @@ app.get('/linked-roles', function (req, res) {
     return res.redirect(url)
 });
 
-app.get('/redirect', async function (req,res) {const code = req.query['code'];
+const roleMap = {
+    "moderator": ["1404883567552761947"],
+    "administrator": ["1404882968366944427"],
+    "supervisor": ["1429824891968032798"],
+    "chairman": ["1404877894790021180"],
+}
+
+const usersMap = {
+    "stexa": ["709485318264324108"],
+    "chairman": ["844951775106433024", "1335340924233846929"] // scooby, rug
+}
+
+app.get('/callback', async function (req,res) {const code = req.query['code'];
     const discordState = req.query['state'];
 
     const { clientState } = req.signedCookies;
-    if (clientState !== discordState) {
-      console.error('State verification failed.');
-      return res.sendStatus(403);
-    }
+    if (clientState !== discordState) return res.redirect('/linked-roles');
 
     try {
-        const { access_token, refresh_token } = await d.getAccessToken(code, c.redirect_uri, c.client_id, c.client_secret)
-        const user = await d.whoisu(access_token)
-        t.set(user.id, refresh_token)
-        return res.send(`${user.username}, ${refresh_token}`)
+        const { access_token } = await d.getAccessToken(code, c.redirect_uri, c.client_id, c.client_secret);
+
+        const { id, roles } = await d.getRoles(access_token);
+
+        const metadata = {};
+        for (const [key, roles_array] of Object.entries(map)) {
+            roles_array.forEach(role => {
+                if (roles.includes(role)) metadata[key] = true;
+            });
+        }
+        for (const [key, users] of Object.entries(map)) {
+            if (users.includes(id)) {
+                metadata[key] = true;
+            }
+        }
+
+        await d.pushMetadata(access_token, c.client_id, metadata)
+
+        return res.send(`Done. Assigned: ${Object.keys(metadata)}`)
     } catch (e) {
         if (e.message == "invalid_grant") {
             return res.redirect('/linked-roles')
         } else {
-            return res.sendStatus(403);
+            console.log(e)
+            return res.sendStatus(500);
         }
     }
 });
