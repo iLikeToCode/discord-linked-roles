@@ -1,4 +1,4 @@
-import roles from "./roleMap.json" with { type: "json" }
+import { roleMap, rolesToAddViewPerm } from "./roleMap.json" with { type: "json" }
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,7 +14,7 @@ const url = `https://discord.com/api/v10/applications/${c.client_id}/role-connec
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
-const body = Object.keys(roles).map(key => ({
+const body = Object.keys(roleMap).map(key => ({
     key,
     name: capitalize(key),
     description: `${capitalize(key)} Rank`,
@@ -30,10 +30,50 @@ const response = await fetch(url, {
   },
 });
 
-if (response.ok) {
-  const data = await response.json();
-  console.log(data);
-} else {
+if (!response.ok) {
   const data = await response.text();
   console.log(data);
+}
+
+console.log("Metadata uploaded!")
+
+async function getChannels() {
+    const res = await fetch(`https://discord.com/api/v10/guilds//channels`, {
+        headers: {
+            Authorization: `Bot ${BOT_TOKEN}`,
+        },
+    });
+    return res.json();
+}
+
+async function addViewPermission(channelId, id) {
+    const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/permissions/${id}`, {
+        method: 'PUT',
+        headers: {
+            Authorization: `Bot ${c.token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            type: 0,
+            allow: `${1 << 10}`,
+            deny: '0',
+        }),
+    });
+    if (res.status == 429) throw new Error("Rate Limit Reached")
+}
+
+const channels = await getChannels();
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+for (const channel of channels) {
+  if (['GUILD_TEXT', 'GUILD_FORUM', 'GUILD_NEWS'].includes(channel.type)) {
+    for (const id of Object.values(rolesToAddViewPerm)) {
+      await addViewPermission(channel.id, id);
+      console.log(`Added VIEW_CHANNEL for ${id} in ${channel.name}`);
+      await wait(250);
+    }
+  }
 }

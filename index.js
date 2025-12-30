@@ -1,7 +1,7 @@
 import * as d from './discord.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import roleMap from './roleMap.json' with { type: "json" };
+import { roleMap } from './roleMap.json' with { type: "json" };
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -38,7 +38,7 @@ app.get('/callback', async function (req,res) {const code = req.query['code'];
         const { id, roles } = await d.getRoles(access_token);
 
         const metadata = {};
-        for (const [key, roles_array] of Object.entries(map)) {
+        for (const [key, roles_array] of Object.entries(roleMap)) {
             roles_array.forEach(role => {
                 if (roles.includes(role)) metadata[key] = true;
             });
