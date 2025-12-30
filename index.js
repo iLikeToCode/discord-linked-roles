@@ -30,11 +30,6 @@ const roleMap = {
     "chairman": ["1404877894790021180"],
 }
 
-const usersMap = {
-    "stexa": ["709485318264324108"],
-    "chairman": ["844951775106433024", "1335340924233846929"] // scooby, rug
-}
-
 app.get('/callback', async function (req,res) {const code = req.query['code'];
     const discordState = req.query['state'];
 
@@ -51,11 +46,6 @@ app.get('/callback', async function (req,res) {const code = req.query['code'];
             roles_array.forEach(role => {
                 if (roles.includes(role)) metadata[key] = true;
             });
-        }
-        for (const [key, users] of Object.entries(map)) {
-            if (users.includes(id)) {
-                metadata[key] = true;
-            }
         }
 
         await d.pushMetadata(access_token, c.client_id, metadata)
