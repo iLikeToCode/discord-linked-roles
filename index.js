@@ -1,7 +1,7 @@
 import * as d from './discord.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import roleMap from './roleMap.json';
+import roleMap from './roleMap.json' assert { type: 'json' };
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -55,5 +55,5 @@ app.get('/callback', async function (req,res) {const code = req.query['code'];
     }
 });
 
-app.listen(8787);
-console.log('Express started on port 8787');
+app.listen(3001);
+console.log('Express started on port 3001');
