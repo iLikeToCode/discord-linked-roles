@@ -3,6 +3,7 @@ export const roleMap = {
 	// running register.js will auto register this, then the web server will match when a user authenticates
 	// if user has any of the roles in this array, they are given the positive metadata
 	// they can then clame the role in the linked roles section
+	// discord enforces a max of 5 entries here
 	"staff_team":    ["1404896442296041543"],
 	"high_rank":     ["1418037523623706724"],
 	"directive":     ["1452703259541110784"],
