@@ -38,7 +38,7 @@ if (!response.ok) {
 console.log("Metadata uploaded!")
 
 async function getChannels() {
-    const res = await fetch(`https://discord.com/api/v10/guilds//channels`, {
+    const res = await fetch(`https://discord.com/api/v10/guilds/1404877164213571785/channels`, {
         headers: {
             Authorization: `Bot ${c.token}`,
         },
