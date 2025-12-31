@@ -1,8 +1,5 @@
 
 export const roleMap = {
-	"moderator":     ["1404883567552761947"],
-	"administrator": ["1404882968366944427"],
-	"developer":     ["1415710245048684575"],
 	"supervisor":    ["1429824891968032798"],
 	"management":    ["1429822557338472529"],
 	"directive":     ["1452703259541110784"],
