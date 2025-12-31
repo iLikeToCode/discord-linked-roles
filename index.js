@@ -35,7 +35,7 @@ app.get('/callback', async function (req,res) {const code = req.query['code'];
     try {
         const { access_token } = await d.getAccessToken(code, c.redirect_uri, c.client_id, c.client_secret);
 
-        const { id, roles } = await d.getRoles(access_token);
+        const { roles } = await d.getMember(access_token);
 
         const metadata = {};
         for (const [key, roles_array] of Object.entries(roleMap)) {
