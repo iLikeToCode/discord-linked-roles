@@ -1,4 +1,4 @@
-import { roleMap, rolesToAddViewPerm } from "./roleMap.json" with { type: "json" }
+import { roleMap, rolesToAddViewPerm } from "./roles.js";
 import dotenv from "dotenv";
 dotenv.config();
 

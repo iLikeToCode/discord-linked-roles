@@ -1,7 +1,7 @@
 import * as d from './discord.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { roleMap } from './roleMap.json' with { type: "json" };
+import { roleMap } from './roles.js';
 import dotenv from "dotenv";
 dotenv.config();
 
