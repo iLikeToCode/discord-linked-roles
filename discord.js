@@ -1,15 +1,11 @@
-import crypto from 'crypto';
-
 export function getOauthUrl(redirect_uri, client_id) {
-    const state = crypto.randomUUID();
     const url = new URL('https://discord.com/api/oauth2/authorize');
 	url.searchParams.set('client_id', client_id);
 	url.searchParams.set('redirect_uri', redirect_uri);
 	url.searchParams.set('response_type', 'code');
-    url.searchParams.set('state', state);
 	url.searchParams.set('scope', 'role_connections.write guilds.members.read identify');
 	url.searchParams.set('prompt', 'consent');
-    return { url: url.toString(), state }
+    return { url: url.toString() }
 }
 
 export async function getAccessToken(code, redirect_uri, client_id, client_secret) {

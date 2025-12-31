@@ -1,6 +1,5 @@
 import * as d from './discord.js';
 import express from 'express';
-import cookieParser from 'cookie-parser';
 import { roleMap } from './roles.js';
 import dotenv from "dotenv";
 dotenv.config();
@@ -11,27 +10,21 @@ const c = {
     client_id: process.env.DISCORD_CLIENT_ID,
     client_secret: process.env.DISCORD_CLIENT_SECRET,
     token: process.env.DISCORD_TOKEN,
-    secret: process.env.COOKIE_SECRET,
 }
 
 var app = express();
 
-app.use(cookieParser(c.secret));
+console.log(d.getOauthUrl(process.env.DISCORD_REDIRECT_URI, process.env.DISCORD_CLIENT_ID))
+
 
 app.get('/', (req, res) => res.redirect('/linked-roles'));
 
 app.get('/linked-roles', function (req, res) {
-    const { url, state } = d.getOauthUrl(process.env.DISCORD_REDIRECT_URI, process.env.DISCORD_CLIENT_ID)
-    res.cookie('clientState', state, { maxAge: 1000 * 60 * 5, signed: true })
+    const { url } = d.getOauthUrl(process.env.DISCORD_REDIRECT_URI, process.env.DISCORD_CLIENT_ID)
     return res.redirect(url)
 });
 
 app.get('/callback', async function (req,res) {const code = req.query['code'];
-    const discordState = req.query['state'];
-
-    const { clientState } = req.signedCookies;
-    if (clientState !== discordState) return res.redirect('/linked-roles');
-
     try {
         const { access_token } = await d.getAccessToken(code, c.redirect_uri, c.client_id, c.client_secret);
 
