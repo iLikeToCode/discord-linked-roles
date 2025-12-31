@@ -7,7 +7,7 @@ const c = {
     client_id: process.env.DISCORD_CLIENT_ID,
     client_secret: process.env.DISCORD_CLIENT_SECRET,
     token: process.env.DISCORD_TOKEN,
-    secret: process.env.COOKIE_SECRET,
+    guild_id: process.env.GUILD_ID
 }
 
 const url = `https://discord.com/api/v10/applications/${c.client_id}/role-connections/metadata`;
@@ -38,7 +38,7 @@ if (!response.ok) {
 console.log("Metadata uploaded!")
 
 async function getChannels() {
-    const res = await fetch(`https://discord.com/api/v10/guilds/1404877164213571785/channels`, {
+    const res = await fetch(`https://discord.com/api/v10/guilds/${c.guild_id}/channels`, {
         headers: {
             Authorization: `Bot ${c.token}`,
         },
