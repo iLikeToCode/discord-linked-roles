@@ -10,11 +10,12 @@ const c = {
     client_id: process.env.DISCORD_CLIENT_ID,
     client_secret: process.env.DISCORD_CLIENT_SECRET,
     token: process.env.DISCORD_TOKEN,
+    guild_id: process.env.GUILD_ID
 }
 
 var app = express();
 
-console.log(d.getOauthUrl(process.env.DISCORD_REDIRECT_URI, process.env.DISCORD_CLIENT_ID))
+console.log(d.getOauthUrl(process.env.DISCORD_REDIRECT_URI, process.env.DISCORD_CLIENT_ID)) // put this in the bot's linked roles url on dev portal
 
 
 app.get('/', (req, res) => res.redirect('/linked-roles'));
@@ -28,7 +29,7 @@ app.get('/callback', async function (req,res) {const code = req.query['code'];
     try {
         const { access_token } = await d.getAccessToken(code, c.redirect_uri, c.client_id, c.client_secret);
 
-        const { roles } = await d.getMember(access_token);
+        const { roles } = await d.getMember(access_token, c.guild_id);
 
         const metadata = {};
         for (const [key, roles_array] of Object.entries(roleMap)) {
