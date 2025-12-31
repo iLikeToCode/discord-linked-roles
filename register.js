@@ -69,10 +69,10 @@ function wait(ms) {
 }
 
 for (const channel of channels) {
-  if (['GUILD_TEXT', 'GUILD_FORUM', 'GUILD_NEWS'].includes(channel.type)) {
-    for (const id of Object.values(rolesToAddViewPerm)) {
-      await addViewPermission(channel.id, id);
-      console.log(`Added VIEW_CHANNEL for ${id} in ${channel.name}`);
+  if ([0, 15, 5, 4].includes(channel.type)) {
+    for (const r of Object.values(rolesToAddViewPerm)) {
+      await addViewPermission(channel.id, r);
+      console.log(`Added VIEW_CHANNEL for ${r} in ${channel.name}`);
       await wait(250);
     }
   }
